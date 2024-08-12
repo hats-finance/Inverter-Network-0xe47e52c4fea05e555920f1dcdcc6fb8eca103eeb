@@ -203,8 +203,8 @@ src
 
   A significant vulnerability has been identified, which allows an attacker to transfer all tokens from the `FundingManager` to themselves. This issue stems from two main weaknesses:
 
-1. **Permission Oversight**: The `Orchestrator_v1` contract has an `executeTx()` function that allows the owner to make calls to any contract. Alarmingly, any module within the system can also assume this permission through `executeTxFromModule()`, effectively posing as the orchestrator.
-2. **Flawed Access Control**: The `FundingManager` contract uses a vulnerable access control called `onlyOrchestrator()`, which only checks if the `msg.sender` is the orchestrator instead of verifying the owner’s role, as `onlyOrchestratorOwner()` does.
+  1. **Permission Oversight**: The `Orchestrator_v1` contract has an `executeTx()` function that allows the owner to make calls to any contract. Alarmingly, any module within the system can also assume this permission through `executeTxFromModule()`, effectively posing as the orchestrator.
+  2. **Flawed Access Control**: The `FundingManager` contract uses a vulnerable access control called `onlyOrchestrator()`, which only checks if the `msg.sender` is the orchestrator instead of verifying the owner’s role, as `onlyOrchestratorOwner()` does.
 
   This flaw enables any module to call `transferOrchestratorToken()` indirectly through `executeTxFromModule()`, bypassing proper access controls. It is recommended to use `onlyOrchestratorOwner()` for critical functions like `transferOrchestratorToken()` and implement stricter controls on `executeTxFromModule()`.
 
