@@ -206,17 +206,17 @@ src
 1. **Permission Oversight**: The `Orchestrator_v1` contract has an `executeTx()` function that allows the owner to make calls to any contract. Alarmingly, any module within the system can also assume this permission through `executeTxFromModule()`, effectively posing as the orchestrator.
 2. **Flawed Access Control**: The `FundingManager` contract uses a vulnerable access control called `onlyOrchestrator()`, which only checks if the `msg.sender` is the orchestrator instead of verifying the owner’s role, as `onlyOrchestratorOwner()` does.
 
-This flaw enables any module to call `transferOrchestratorToken()` indirectly through `executeTxFromModule()`, bypassing proper access controls. It is recommended to use `onlyOrchestratorOwner()` for critical functions like `transferOrchestratorToken()` and implement stricter controls on `executeTxFromModule()`.
+  This flaw enables any module to call `transferOrchestratorToken()` indirectly through `executeTxFromModule()`, bypassing proper access controls. It is recommended to use `onlyOrchestratorOwner()` for critical functions like `transferOrchestratorToken()` and implement stricter controls on `executeTxFromModule()`.
 
 
-  **Link**: [Issue #50](https://github.com/hats-finance/Inverter-Network-0xe47e52c4fea05e555920f1dcdcc6fb8eca103eeb/issues/50)
+   **Link**: [Issue #50](https://github.com/hats-finance/Inverter-Network-0xe47e52c4fea05e555920f1dcdcc6fb8eca103eeb/issues/50)
 
 
 - **User Blacklisted by USDC Can't Unstake Tokens in LM_PC_Staking_v1 Contract**
 
   The `LM_PC_Staking_v1.sol` contract allows users to stake tokens such as USDC to earn rewards. However, problems arise if a user is blacklisted by USDC, as illustrated by a scenario involving Alice. After staking USDC, Alice realizes she is blacklisted when she attempts to unstake. Since USDC's transfer function checks for blacklisted addresses, the transaction fails, leaving Alice unable to retrieve her staked tokens. 
 
-To resolve this, it is recommended to modify the `unstake` function to accept a recipient address parameter, allowing the staked tokens to be transferred to a non-blacklisted address. This ensures users can retrieve their assets even under blacklist conditions.
+  To resolve this, it is recommended to modify the `unstake` function to accept a recipient address parameter, allowing the staked tokens to be transferred to a non-blacklisted address. This ensures users can retrieve their assets even under blacklist conditions.
 
 
   **Link**: [Issue #54](https://github.com/hats-finance/Inverter-Network-0xe47e52c4fea05e555920f1dcdcc6fb8eca103eeb/issues/54)
@@ -234,7 +234,7 @@ To resolve this, it is recommended to modify the `unstake` function to accept a 
 
   The function `assertionResolvedCallback` within a contract is essential for integrating with OOv3. However, the function doesn't verify if `assertionId` actually exists, allowing malicious users to exploit this. Specifically, malicious users can direct the address of `LM_PC_KPIRewarder_v1` as the `callbackRecipient` for an assertion not created by `LM_PC_KPIRewarder_v1`. 
 
-In an attack scenario, a user can create and dispute an assertion through OOv3, calling `settleAssertion` to make `assertionResolvedCallback` run on `LM_PC_KPIRewarder_v1`. Since the `assertionId` isn't validated, an attacker can reset the `assertionPending` flag to false, allowing for new assertions to be processed, contrary to the intended single active assertion limitation. The recommendation is to check the existence of `assertionId` before resolving the assertion to prevent this exploit.
+  In an attack scenario, a user can create and dispute an assertion through OOv3, calling `settleAssertion` to make `assertionResolvedCallback` run on `LM_PC_KPIRewarder_v1`. Since the `assertionId` isn't validated, an attacker can reset the `assertionPending` flag to false, allowing for new assertions to be processed, contrary to the intended single active assertion limitation. The recommendation is to check the existence of `assertionId` before resolving the assertion to prevent this exploit.
 
 
   **Link**: [Issue #65](https://github.com/hats-finance/Inverter-Network-0xe47e52c4fea05e555920f1dcdcc6fb8eca103eeb/issues/65)
@@ -252,10 +252,10 @@ In an attack scenario, a user can create and dispute an assertion through OOv3, 
 
   In the LM_PC_KPIRewarder_v1 contract, an asserter submits KPI data to the UMA oracle, which accepts bonds in various currencies like USDC/USDT. If an asserter submits incorrect data, an exploiter can dispute this using a blocklisted address, causing Denial-of-Service (DoS) on the UMA's settleAssertion function. This blocks the assertionResolvedCallback, disrupting the entire LM_PC_KPIRewarder_v1 logic. The problem arises because assertions can’t be processed if assertionPending remains true. A potential solution involves a backup mechanism allowing new assertions to indicate if a contract is stuck, which can reset assertionPending to false. 
 
-Attachments include a Proof of Concept and an optional revised code file suggesting the backup logic.
+  Attachments include a Proof of Concept and an optional revised code file suggesting the backup logic.
 
 
-  **Link**: [Issue #75](https://github.com/hats-finance/Inverter-Network-0xe47e52c4fea05e555920f1dcdcc6fb8eca103eeb/issues/75)
+   **Link**: [Issue #75](https://github.com/hats-finance/Inverter-Network-0xe47e52c4fea05e555920f1dcdcc6fb8eca103eeb/issues/75)
 
 
 - **Admin Bypass of Orchestrator Module Checks for Critical Components**
